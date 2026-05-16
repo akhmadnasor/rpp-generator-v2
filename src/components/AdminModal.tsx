@@ -96,9 +96,13 @@ export default function AdminModal({ isOpen, onClose }: AdminModalProps) {
 
   const handleSave = async () => {
     setIsSaving(true);
-    await saveAdminConfigsDB(apiConfigs, customSettings);
+    const success = await saveAdminConfigsDB(apiConfigs, customSettings);
     setIsSaving(false);
-    alert('Konfigurasi berhasil disimpan ke database!');
+    if (success) {
+      alert('Konfigurasi berhasil disimpan ke database!');
+    } else {
+      alert('Gagal menyimpan konfigurasi ke database. Silakan cek console untuk detail.');
+    }
   };
 
   const handleApiChange = (index: number, value: string) => {

@@ -9,6 +9,12 @@ export async function fetchAdminConfigsDB() {
   try {
     const { data, error } = await supabase.from('admin_configs').select('*').single();
     if (error) throw error;
+    if (data) {
+      return {
+        api_configs: data.api_configs || [],
+        ...(data.custom_settings || {})
+      };
+    }
     return data;
   } catch (err) {
     console.warn('Could not fetch admin_configs from Supabase (maybe table missing?). Falling back to local storage.', err);
@@ -19,21 +25,20 @@ export async function fetchAdminConfigsDB() {
 export async function saveAdminConfigsDB(apiConfigs: string[], customSettings: any) {
   try {
     const payload = {
+      id: 1,
       api_configs: apiConfigs,
-      ...customSettings,
-      updated_at: new Date().toISOString()
+      custom_settings: customSettings
     };
     
-    // Attempt to update first (assuming id 1 exists)
-    const { data: existing, error: fetchErr } = await supabase.from('admin_configs').select('id').eq('id', 1).single();
-    
-    if (existing) {
-      await supabase.from('admin_configs').update(payload).eq('id', 1);
-    } else {
-      await supabase.from('admin_configs').insert([{ id: 1, ...payload }]);
+    const { error } = await supabase.from('admin_configs').upsert(payload, { onConflict: 'id' });
+    if (error) {
+       console.error("Supabase upsert error:", error);
+       throw error;
     }
+    return true;
   } catch (err) {
     console.error('Failed to save to Supabase:', err);
+    return false;
   }
 }
 
