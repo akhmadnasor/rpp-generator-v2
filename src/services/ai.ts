@@ -2,15 +2,30 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { RPPData } from "../types";
 
 let _ai: any = null;
-const getAI = () => {
-  if (!_ai) {
-    _ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const getAI = async () => {
+  let apiKey = process.env.GEMINI_API_KEY;
+  try {
+    const { fetchAdminConfigsDB } = await import('../lib/supabase');
+    const dbConfig = await fetchAdminConfigsDB();
+    if (dbConfig && dbConfig.api_configs && dbConfig.api_configs.length > 0) {
+      const validKeys = dbConfig.api_configs.filter((k: string) => k && k.trim() !== "");
+      if (validKeys.length > 0) {
+        apiKey = validKeys[Math.floor(Math.random() * validKeys.length)];
+      }
+    }
+  } catch (err) {
+    console.warn("Failed to fetch API keys from DB", err);
   }
-  return _ai;
+
+  if (!apiKey) {
+    throw new Error("API key is missing. Please provide a valid API key via Admin config or environment variable.");
+  }
+
+  return new GoogleGenAI({ apiKey });
 };
 
 export async function generateTP(cpText: string) {
-  const ai = getAI();
+  const ai = await getAI();
   const prompt = `Anda adalah seorang ahli kurikulum pendidikan Indonesia. Analisis kalimat Capaian Pembelajaran (CP) berikut: "${cpText}". Identifikasi setiap materi pokok yang utuh dan berbeda di dalamnya.
         
   Untuk setiap materi pokok yang teridentifikasi, buatkan 3 Tujuan Pembelajaran (TP) sesuai level kognitif: Memahami, Mengaplikasi, dan Merefleksi.
@@ -50,7 +65,7 @@ export async function generateTP(cpText: string) {
 }
 
 export async function generateRPPExtras(data: RPPData, tpInfo: {level: string, text: string}) {
-  const ai = getAI();
+  const ai = await getAI();
   const prompt = `Anda adalah seorang ahli pembuat Modul Ajar spesialis strategi dan asesmen.
 Model Pembelajaran: ${data.modelPembelajaran}
 Metode Pembelajaran: ${data.metodePembelajaran.join(', ')}
