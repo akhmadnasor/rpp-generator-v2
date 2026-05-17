@@ -30,15 +30,35 @@ export async function saveAdminConfigsDB(apiConfigs: string[], customSettings: a
       custom_settings: customSettings
     };
     
-    const { error } = await supabase.from('admin_configs').upsert(payload, { onConflict: 'id' });
-    if (error) {
-       console.error("Supabase upsert error:", error);
-       throw error;
+    // Instead of upsert which sometimes fails due to PostgREST config,
+    // let's try updating first.
+    const { data, error: updateErr } = await supabase
+      .from('admin_configs')
+      .update(payload)
+      .eq('id', 1)
+      .select();
+
+    if (updateErr) {
+       console.error("Supabase update error:", updateErr);
+       return { success: false, error: updateErr.message || JSON.stringify(updateErr) };
     }
-    return true;
-  } catch (err) {
+
+    // If no row was updated, we need to insert
+    if (!data || data.length === 0) {
+      const { error: insertErr } = await supabase
+        .from('admin_configs')
+        .insert([payload]);
+
+      if (insertErr) {
+         console.error("Supabase insert error:", insertErr);
+         return { success: false, error: insertErr.message || JSON.stringify(insertErr) };
+      }
+    }
+
+    return { success: true };
+  } catch (err: any) {
     console.error('Failed to save to Supabase:', err);
-    return false;
+    return { success: false, error: err.message || JSON.stringify(err) };
   }
 }
 

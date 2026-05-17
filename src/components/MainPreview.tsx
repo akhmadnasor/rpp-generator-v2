@@ -154,9 +154,17 @@ export default function MainPreview({
             asmHtml += `<h4 class="font-bold text-md mt-4">I. Pilihan Ganda</h4><ol class="list-decimal list-inside space-y-4 mb-8 mt-2 p-4 bg-white border rounded">`;
             if (hots.pilihan_ganda) {
                 hots.pilihan_ganda.forEach((s: any, i: number) => {
-                    asmHtml += `<li class="mt-4"><span class="font-medium">${s.pertanyaan}</span><ol type="A" class="ml-8 list-none p-0 mt-2 space-y-1 text-gray-700">
-                    <li>A. ${s.opsi.A}</li><li>B. ${s.opsi.B}</li><li>C. ${s.opsi.C}</li><li>D. ${s.opsi.D}</li><li>E. ${s.opsi.E}</li>
-                    </ol><p class="text-xs font-bold text-green-600 mt-2 bg-green-50 p-1.5 inline-block rounded">Kunci Jawaban: ${s.kunci}</p></li>`;
+                    let opsiHtml = '';
+                    if (s.opsi) {
+                        for (let [key, val] of Object.entries(s.opsi)) {
+                            if (val && typeof val === 'string' && val.trim() !== '') {
+                                opsiHtml += `<li>${key}. ${val}</li>`;
+                            }
+                        }
+                    }
+                    asmHtml += `<li class="mt-4"><span class="font-medium">${s.pertanyaan}</span><ul class="ml-8 list-none p-0 mt-2 space-y-1 text-gray-700">
+                    ${opsiHtml}
+                    </ul><p class="text-xs font-bold text-green-600 mt-2 bg-green-50 p-1.5 inline-block rounded">Kunci Jawaban: ${s.kunci}</p></li>`;
                 });
             }
             asmHtml += `</ol><h4 class="font-bold text-md mt-6">II. Uraian / Esai HOTS</h4><ol class="list-decimal list-inside space-y-6 mt-2 p-4 bg-white border rounded">`;
@@ -247,7 +255,7 @@ export default function MainPreview({
           )}
 
           {activeTab === 'riwayat' && (
-            <div>
+            <div className="print:hidden">
               <h3 className="text-xl font-bold mb-4 border-b pb-2">Riwayat Generate</h3>
               <div className="flex items-center mb-4 space-x-2">
                 <span className="text-sm font-semibold text-gray-700">Filter Guru:</span>
@@ -284,7 +292,7 @@ export default function MainPreview({
           )}
 
           {activeTab === 'welcome' && (
-            <div className="prose prose-sm max-w-none">
+            <div className="prose prose-sm max-w-none print:hidden">
                 <h2 className="text-2xl font-bold mb-4 text-gray-800">Sistem Pembuat Alur & Modul Ajar</h2>
                 <p>Silakan isi formulir di panel sebelah kiri untuk memulai.</p>
                 <ol className="list-decimal pl-5 space-y-2 text-gray-600 mt-4">
@@ -299,8 +307,8 @@ export default function MainPreview({
           )}
 
           {activeTab === 'tp' && (
-            <div>
-              <h3 className="text-xl font-bold mb-4 border-b pb-2">Tujuan Pembelajaran (TP)</h3>
+            <div className={`print:hidden`}>
+              <h3 className={`text-xl font-bold mb-4 border-b pb-2`}>Tujuan Pembelajaran (TP)</h3>
               {tujuanPembelajaran.map((g, i) => (
                  <div key={i} className="mb-6">
                     <h4 className="font-bold bg-gray-200 p-2 rounded-t text-sm">Topik: {g.topic}</h4>
@@ -323,22 +331,22 @@ export default function MainPreview({
           )}
 
           {activeTab === 'atp' && (
-            <div>
-              <h3 className="text-xl font-bold mb-4 border-b pb-2">Alur Tujuan Pembelajaran (ATP)</h3>
+            <div className={`print:hidden`}>
+              <h3 className={`text-xl font-bold mb-4 border-b pb-2`}>Alur Tujuan Pembelajaran (ATP)</h3>
               {tujuanPembelajaran.map((g, i) => (
-                <div key={i} className="mb-6">
-                   <h4 className="font-bold mt-4 mb-2 text-sm">{g.topic}</h4>
-                   <table className="w-full text-sm border-collapse border border-gray-300">
-                     <thead className="bg-gray-50">
-                        <tr><th className="p-2 border text-center w-16">No</th><th className="p-2 border">Tujuan Pembelajaran (diurutkan)</th></tr>
-                     </thead>
-                     <tbody>
-                        {g.tps.map((tp, idx) => (
-                            <tr key={idx}><td className="p-2 border text-center font-bold text-gray-500">{idx+1}</td><td className="p-2 border">{tp.text}</td></tr>
-                        ))}
-                     </tbody>
-                   </table>
-                </div>
+                 <div key={i} className="mb-6">
+                    <h4 className="font-bold mt-4 mb-2 text-sm">{g.topic}</h4>
+                    <table className="w-full text-sm border-collapse border border-gray-300">
+                      <thead className="bg-gray-50">
+                         <tr><th className="p-2 border text-center w-16">No</th><th className="p-2 border text-left">Tujuan Pembelajaran (diurutkan)</th></tr>
+                      </thead>
+                      <tbody>
+                         {g.tps.map((tp, idx) => (
+                             <tr key={idx}><td className="p-2 border text-center font-bold text-gray-500">{idx+1}</td><td className="p-2 border">{tp.text}</td></tr>
+                         ))}
+                      </tbody>
+                    </table>
+                 </div>
               ))}
               <div className="mt-8 text-right print:hidden">
                 <button onClick={() => onSwitchTab('kktp')} className="bg-gray-800 text-white px-6 py-2 rounded font-semibold"><FastForward className="w-4 h-4 inline mr-2"/>Lanjut Susun KKTP</button>
@@ -347,8 +355,8 @@ export default function MainPreview({
           )}
 
           {activeTab === 'kktp' && (
-            <div>
-              <h3 className="text-xl font-bold mb-4 border-b pb-2">Kriteria Ketercapaian (KKTP)</h3>
+            <div className={`print:hidden`}>
+              <h3 className={`text-xl font-bold mb-4 border-b pb-2`}>Kriteria Ketercapaian (KKTP)</h3>
               <table className="w-full text-xs border border-collapse border-gray-300">
                 <thead className="bg-gray-50">
                    <tr><th className="p-2 border text-left w-1/3">Tujuan Pembelajaran</th><th className="p-2 border text-left w-1/3">Kriteria</th><th className="p-2 border text-left">Interval</th></tr>
@@ -377,8 +385,8 @@ export default function MainPreview({
             </div>
           )}
 
-          {(activeTab === 'rpp' || activeTab === 'cetak') && state.finalRppReady && (
-             <div className="prose max-w-none text-sm flex flex-col gap-4 print:block">
+          {state.finalRppReady && (
+             <div className={`prose max-w-none text-sm flex-col gap-4 print:flex ${activeTab === 'rpp' || activeTab === 'cetak' ? 'flex' : 'hidden'} ${activeTab === 'cetak' ? 'pt-8' : ''}`}>
                 <h2 className="text-center font-bold text-2xl mb-1">RENCANA PELAKSANAAN PEMBELAJARAN (RPP)</h2>
                 <h3 className="text-center font-bold text-xl mb-8">PERTEMUAN KE-1</h3>
                 
@@ -466,19 +474,19 @@ export default function MainPreview({
              </div>
           )}
 
-          {(activeTab === 'asesmen' || activeTab === 'cetak') && (
-              <div className="prose max-w-none text-sm break-before-page w-full print:block mt-8">
+          {state.finalRppReady && (
+              <div className={`prose max-w-none text-sm break-before-page w-full mt-8 print:block ${activeTab === 'asesmen' || activeTab === 'cetak' ? 'block' : 'hidden'}`}>
                 <div dangerouslySetInnerHTML={{ __html: state.asesmenHtml }}></div>
               </div>
           )}
 
-          {(activeTab === 'lkpd' || activeTab === 'cetak') && (
-              <div className="prose max-w-none text-sm break-before-page w-full print:block mt-8">
+          {state.finalRppReady && (
+              <div className={`prose max-w-none text-sm break-before-page w-full mt-8 print:block ${activeTab === 'lkpd' || activeTab === 'cetak' ? 'block' : 'hidden'}`}>
                 <div dangerouslySetInnerHTML={{ __html: state.lkpdHtml }}></div>
               </div>
           )}
 
-          {activeTab === 'cetak' && (
+          {activeTab === 'cetak' && state.finalRppReady && (
               <div className="text-center py-16 print:hidden">
                   <Printer className="w-16 h-16 mx-auto text-gray-300 mb-4" />
                   <h3 className="text-xl font-bold mb-2 text-gray-800">Modul Siap Dicetak</h3>
@@ -488,6 +496,7 @@ export default function MainPreview({
                   </button>
               </div>
           )}
+
 
         </div>
       </div>

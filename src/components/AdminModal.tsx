@@ -96,12 +96,12 @@ export default function AdminModal({ isOpen, onClose }: AdminModalProps) {
 
   const handleSave = async () => {
     setIsSaving(true);
-    const success = await saveAdminConfigsDB(apiConfigs, customSettings);
+    const result = await saveAdminConfigsDB(apiConfigs, customSettings);
     setIsSaving(false);
-    if (success) {
+    if (result.success) {
       alert('Konfigurasi berhasil disimpan ke database!');
     } else {
-      alert('Gagal menyimpan konfigurasi ke database. Silakan cek console untuk detail.');
+      alert(`Gagal menyimpan konfigurasi ke database: ${result.error}`);
     }
   };
 
@@ -333,7 +333,9 @@ export default function AdminModal({ isOpen, onClose }: AdminModalProps) {
   mapel text,
   materi text,
   kelas text,
-  html text,
+  rpp_html text,
+  asesmen_html text,
+  lkpd_html text,
   pdf_url text,
   created_at timestamp with time zone DEFAULT now()
 );`}

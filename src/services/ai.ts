@@ -97,7 +97,7 @@ Buat respons dalam format JSON valid dengan 7 kunci utama: "pertanyaan_pemantik"
    - "awal" (string): Rincian penerapan "Asesmen As Learning". Jelaskan teknik, penggunaan, dan tampilkan tabel rubrik/checklist penilaiannya (gunakan HTML string).
    - "proses" (string): Rincian penerapan "Asesmen For Learning". Jelaskan teknik, penggunaan, dan tampilkan tabel rubrik/checklist penilaiannya (gunakan HTML string).
    - "akhir" (string): Rincian penerapan "Asesmen Of Learning". Jelaskan teknik, penggunaan, dan tampilkan tabel rubrik penilaiannya (gunakan HTML string).
-6. "hots": berisi "pilihan_ganda" (array of 10 objek: pertanyaan, opsi {A,B,C,D,E}, kunci) dan "uraian" (array of 5 objek: pertanyaan, pembahasan). Soal wajib benar-benar relevan dengan jenjang ${data.jenjang}, kelas ${data.kelasSemester}, dan TP.
+6. "hots": berisi "pilihan_ganda" (array of 10 objek: pertanyaan, opsi, kunci) dan "uraian" (array of 5 objek: pertanyaan, pembahasan). Soal wajib benar-benar relevan dengan jenjang ${data.jenjang}, kelas ${data.kelasSemester}, dan TP. Untuk soal pilihan ganda, sediakan 3 pilihan (A, B, C) untuk Kelas 1, 2, 3 SD; sediakan 4 pilihan (A, B, C, D) untuk Kelas 4, 5, 6 SD, SMP, SMA/SMK. Sediakan visual gambar pada pertanyaan (dengan deskripsi teks placeholder gambar seperti [GAMBAR ...]) jika diperlukan.
 7. "lkpd": (string) Desain LKPD berformat HTML. Cukup buatkan struktur dasar yang solid dengan Tailwind (misal p-4, bg-white, border).
    PENTING - Struktur LKPD Jelas:
    - <div class="text-center font-bold text-xl mb-4">LKPD: [Judul Materi]</div>
