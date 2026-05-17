@@ -72,7 +72,7 @@ export default function SidebarForm({
   const faseOptions = FASE_OPTIONS[data.jenjang] || [];
 
   return (
-    <aside className="w-full md:w-[320px] lg:w-[360px] bg-gray-50 border-r border-gray-200 flex flex-col h-full flex-shrink-0 z-20 overflow-hidden">
+    <aside className="w-full md:w-[320px] lg:w-[360px] bg-gray-50 border-r border-gray-200 flex flex-col h-full flex-shrink-0 z-20 overflow-hidden print:hidden">
       <div className="p-4 border-b border-gray-200 bg-white shadow-sm flex items-center justify-between pointer-events-auto">
         <div 
           className="font-bold text-blue-700 text-lg tracking-tight flex items-center cursor-pointer select-none"

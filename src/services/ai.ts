@@ -87,12 +87,13 @@ Buat respons dalam format JSON valid dengan 7 kunci utama: "pertanyaan_pemantik"
 1. "pertanyaan_pemantik": (array of string) 2-3 pertanyaan pemantik yang merangsang rasa ingin tahu siswa terkait materi.
 2. "ringkasan_materi": (string) Ringkasan materi pembelajaran yang dikemas secara terstruktur (bisa menggunakan HTML list atau paragraph).
 3. "sumber_belajar": (array of objects) 3-5 sumber belajar nyata yang SANGAT RELEVAN dengan materi. Sesuaikan dengan sumber yang dipilih: ${data.sumberBelajar.length > 0 ? data.sumberBelajar.join(', ') : 'Quizizz, Wordwall'}. Setiap objek berisi "jenis" (nama platform/sumber misal Quizizz, Wordwall, Buku, YouTube, dll), "deskripsi" (penjelasan singkat penggunaannya), dan "url" (tautan nyata ke sumber tersebut jika relevan/ada).
-4. "kegiatan": (array of objects) Sintaks model pembelajaran. PASTIKAN fase-fase (kunci "fase") SANGAT SESUAI dengan urutan sintaks baku dari model "${data.modelPembelajaran}". Jangan sekadar "Awal, Inti, Penutup". Sesuaikan bahasa penyelesaian dengan materi, untuk siswa jenjang ${data.jenjang} kelas ${data.kelasSemester}. Selipkan esensi pembelajaran mendalam pada instruksinya.
-   PENTING:
+4. "kegiatan": (object) Struktur kegiatan pembelajaran yang terbagi menjadi 3 bagian: "pembuka", "inti", dan "penutup". 
+   - "pembuka" dan "penutup": masing-masing berisi "waktu" (contoh: "15 Menit") dan "langkah" (array of string).
+   - "inti": (array of objects) mewakili Sintaks model pembelajaran. PASTIKAN fase-fase (kunci "fase") SANGAT SESUAI dengan urutan sintaks baku dari model "${data.modelPembelajaran}". Sesuaikan bahasa penyelesaian dengan materi, untuk siswa jenjang ${data.jenjang} kelas ${data.kelasSemester}. Selipkan esensi pembelajaran mendalam pada instruksinya.
+   PENTING UNTUK KEGIATAN INTI:
    - WAJIB sajikan dan integrasikan aktivitas pembelajaran yang memfasilitasi Profil Pelajar Pancasila / Lulusan yang dipilih (${data.profilLulusan.length > 0 ? data.profilLulusan.join(', ') : '-'}) ke dalam langkah-langkah kegiatan secara terstruktur. Nilai-nilai tersebut dicetak tebal (**bold** menggunakan HTML <b> atau <strong>) di dalam penjelasan / urutan langkah, BUKAN ditaruh sebagai nama fase.
    - Sajikan pula "Pengalaman Belajar" yang meliputi aktivitas Merefleksi, Mengaplikasi, dan Memahami secara eksplisit di dalam langkah-langkah kegiatan tersebut.
    - WAJIB tambahkan dan cantumkan istilah esensi pembelajaran mendalam secara relevan pada langkah-langkah kegiatan dengan dicetak tebal dan miring (menggunakan HTML <b><i>...</i></b>), yaitu meliputi: <b><i>Joyful Learning</i></b> (Pembelajaran interaktif, bebas tekanan, memotivasi), <b><i>Mindful Learning</i></b> (Hadir secara utuh/fokus, menumbuhkan konsentrasi/empati), dan <b><i>Meaningful Learning</i></b> (Materi dihubungkan langsung dengan kehidupan nyata nyata siswa).
-   Setiap objek berisi kunci "fase" (nama tahapan model pembelajaran), "waktu" (misal "15 Menit"), dan "langkah" (array of string kegiatan).
 5. "asesmen": (object) skema asesmen berdasarkan jenis asesmen yang dipilih guru di atas.
    - "awal" (string): Rincian penerapan "Asesmen As Learning". Jelaskan teknik, penggunaan, dan WAJIB tampilkan DALAM BENTUK TABEL HTML (<table>, <tr>, <th>, <td>) rubrik/checklist penilaiannya yang informatif.
    - "proses" (string): Rincian penerapan "Asesmen For Learning". Jelaskan teknik, penggunaan, dan WAJIB tampilkan DALAM BENTUK TABEL HTML (<table>, <tr>, <th>, <td>) rubrik/checklist penilaiannya yang informatif.
@@ -122,7 +123,7 @@ Buat respons dalam format JSON valid dengan 7 kunci utama: "pertanyaan_pemantik"
             pilihan_ganda: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { pertanyaan: { type: Type.STRING }, opsi: { type: Type.OBJECT, properties: { A: { type: Type.STRING }, B: { type: Type.STRING }, C: { type: Type.STRING }, D: { type: Type.STRING }, E: { type: Type.STRING } } }, kunci: { type: Type.STRING } } } },
             uraian: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { pertanyaan: { type: Type.STRING }, pembahasan: { type: Type.STRING } } } }
           }},
-          kegiatan: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { fase: { type: Type.STRING }, waktu: { type: Type.STRING }, langkah: { type: Type.ARRAY, items: { type: Type.STRING } } } } },
+          kegiatan: { type: Type.OBJECT, properties: { pembuka: { type: Type.OBJECT, properties: { waktu: { type: Type.STRING }, langkah: { type: Type.ARRAY, items: { type: Type.STRING } } } }, inti: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { fase: { type: Type.STRING }, waktu: { type: Type.STRING }, langkah: { type: Type.ARRAY, items: { type: Type.STRING } } } } }, penutup: { type: Type.OBJECT, properties: { waktu: { type: Type.STRING }, langkah: { type: Type.ARRAY, items: { type: Type.STRING } } } } } },
           asesmen: { type: Type.OBJECT, properties: { awal: { type: Type.STRING }, proses: { type: Type.STRING }, akhir: { type: Type.STRING } } },
           lkpd: { type: Type.STRING }
         }
