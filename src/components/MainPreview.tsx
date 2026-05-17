@@ -156,9 +156,18 @@ export default function MainPreview({
                 hots.pilihan_ganda.forEach((s: any, i: number) => {
                     let opsiHtml = '';
                     if (s.opsi) {
-                        for (let [key, val] of Object.entries(s.opsi)) {
-                            if (val && typeof val === 'string' && val.trim() !== '') {
-                                opsiHtml += `<li>${key}. ${val}</li>`;
+                        if (Array.isArray(s.opsi)) {
+                            const letters = ['A', 'B', 'C', 'D', 'E'];
+                            s.opsi.forEach((val: string, idx: number) => {
+                                if (val && typeof val === 'string' && val.trim() !== '') {
+                                    opsiHtml += `<li>${letters[idx] || idx}. ${val}</li>`;
+                                }
+                            });
+                        } else {
+                            for (let [key, val] of Object.entries(s.opsi)) {
+                                if (val && typeof val === 'string' && val.trim() !== '') {
+                                    opsiHtml += `<li>${key}. ${val}</li>`;
+                                }
                             }
                         }
                     }
@@ -386,7 +395,7 @@ export default function MainPreview({
           )}
 
           {state.finalRppReady && (
-             <div className={`prose max-w-none text-sm flex-col gap-4 print:flex ${activeTab === 'rpp' || activeTab === 'cetak' ? 'flex' : 'hidden'} ${activeTab === 'cetak' ? 'pt-8' : ''}`}>
+             <div className={`prose max-w-none text-sm print:block ${activeTab === 'rpp' || activeTab === 'cetak' ? 'block' : 'hidden'} ${activeTab === 'cetak' ? 'pt-8' : ''}`}>
                 <h2 className="text-center font-bold text-2xl mb-1">RENCANA PELAKSANAAN PEMBELAJARAN (RPP)</h2>
                 <h3 className="text-center font-bold text-xl mb-8">PERTEMUAN KE-1</h3>
                 
