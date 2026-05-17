@@ -303,7 +303,7 @@ export default function MainPreview({
           
           <div className="hidden print:flex fixed bottom-0 left-0 right-0 justify-between items-center text-[10px] text-gray-500 border-t pt-2 w-full px-8 pb-2 bg-white pb-4 z-50">
             <span>{(formData.namaGuru.split('/')[0] || 'Nama Guru').trim()}</span>
-            <span className="font-semibold text-gray-400">Sistem Pembuat Alur & Modul Ajar</span>
+            <span className="font-semibold text-gray-400">SIGMA | Sistem Generator Modul Ajar Berbasis AI</span>
             <span>{formData.namaSekolah}</span>
           </div>
 
@@ -358,7 +358,7 @@ export default function MainPreview({
 
           {activeTab === 'welcome' && (
             <div className="prose prose-sm max-w-none print:hidden">
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">Sistem Pembuat Alur & Modul Ajar</h2>
+                <h2 className="text-2xl font-bold mb-4 text-gray-800">SIGMA | Sistem Generator Modul Ajar Berbasis AI</h2>
                 <p>Silakan isi formulir di panel sebelah kiri untuk memulai.</p>
                 <ol className="list-decimal pl-5 space-y-2 text-gray-600 mt-4">
                     <li>Isi data <strong>Identitas Modul</strong> secara lengkap (Bertanda Wajib).</li>
