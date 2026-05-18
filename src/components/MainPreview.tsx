@@ -99,78 +99,22 @@ export default function MainPreview({
               <tbody>`;
             
             if (result.kegiatan) {
-                // Pembuka
-                if (result.kegiatan.pembuka) {
-                   dynamicHtml += `<tr class="border-t border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
-                     <td class="p-4 border font-bold text-gray-800 align-top max-w-xs shadow-[inset_-4px_0_0_rgba(156,163,175,0.1)]">Kegiatan Pembuka</td>
-                     <td class="p-4 border align-top whitespace-nowrap font-bold text-center text-gray-700 bg-white/50">${result.kegiatan.pembuka.waktu || '-'}</td>
+                const phaseColors = ['bg-blue-50/50', 'bg-green-50/50', 'bg-yellow-50/50', 'bg-purple-50/50', 'bg-pink-50/50', 'bg-orange-50/50'];
+                result.kegiatan.forEach((k: any, i: number) => {
+                   let trClass = 'border-t border-gray-300';
+                   let rowBg = phaseColors[i % phaseColors.length];
+                   dynamicHtml += `<tr class="${trClass} ${rowBg} hover:bg-gray-100 transition-colors">
+                     <td class="p-4 border font-bold text-blue-900 align-top max-w-xs shadow-[inset_-4px_0_0_rgba(59,130,246,0.1)]">${k.fase}</td>
+                     <td class="p-4 border align-top whitespace-nowrap font-bold text-center text-gray-700 bg-white/50">${k.waktu}</td>
                      <td class="p-4 border align-top text-gray-800">
                        <ul class="list-disc list-inside space-y-2 text-justify ml-2">`;
-                   (result.kegiatan.pembuka.langkah || []).forEach((l: string) => {
+                   k.langkah.forEach((l: string) => {
                        dynamicHtml += `<li>${l}</li>`;
                    });
                    dynamicHtml += `</ul></td></tr>`;
-                }
-
-                // Inti
-                if (result.kegiatan.inti && Array.isArray(result.kegiatan.inti)) {
-                    const phaseColors = ['bg-blue-50/50', 'bg-green-50/50', 'bg-yellow-50/50', 'bg-purple-50/50', 'bg-pink-50/50', 'bg-orange-50/50'];
-                    result.kegiatan.inti.forEach((k: any, i: number) => {
-                       let trClass = 'border-t border-gray-300';
-                       let rowBg = phaseColors[i % phaseColors.length];
-                       dynamicHtml += `<tr class="${trClass} ${rowBg} hover:bg-gray-100 transition-colors">
-                         <td class="p-4 border font-bold text-blue-900 align-top max-w-xs shadow-[inset_-4px_0_0_rgba(59,130,246,0.1)]"><div class="text-xs text-blue-600 mb-1 font-semibold uppercase tracking-wider">Kegiatan Inti</div>${k.fase}</td>
-                         <td class="p-4 border align-top whitespace-nowrap font-bold text-center text-gray-700 bg-white/50">${k.waktu}</td>
-                         <td class="p-4 border align-top text-gray-800">
-                           <ul class="list-disc list-inside space-y-2 text-justify ml-2">`;
-                       (k.langkah || []).forEach((l: string) => {
-                           dynamicHtml += `<li>${l}</li>`;
-                       });
-                       dynamicHtml += `</ul></td></tr>`;
-                    });
-                } else if (Array.isArray(result.kegiatan)) {
-                    // Fallback for old formatted data before changes
-                    const phaseColors = ['bg-blue-50/50', 'bg-green-50/50', 'bg-yellow-50/50', 'bg-purple-50/50', 'bg-pink-50/50', 'bg-orange-50/50'];
-                    result.kegiatan.forEach((k: any, i: number) => {
-                       let trClass = 'border-t border-gray-300';
-                       let rowBg = phaseColors[i % phaseColors.length];
-                       dynamicHtml += `<tr class="${trClass} ${rowBg} hover:bg-gray-100 transition-colors">
-                         <td class="p-4 border font-bold text-blue-900 align-top max-w-xs shadow-[inset_-4px_0_0_rgba(59,130,246,0.1)]"><div class="text-xs text-blue-600 mb-1 font-semibold uppercase tracking-wider">Kegiatan Inti</div>${k.fase}</td>
-                         <td class="p-4 border align-top whitespace-nowrap font-bold text-center text-gray-700 bg-white/50">${k.waktu}</td>
-                         <td class="p-4 border align-top text-gray-800">
-                           <ul class="list-disc list-inside space-y-2 text-justify ml-2">`;
-                       (k.langkah || []).forEach((l: string) => {
-                           dynamicHtml += `<li>${l}</li>`;
-                       });
-                       dynamicHtml += `</ul></td></tr>`;
-                    });
-                }
-
-                // Penutup
-                if (result.kegiatan.penutup) {
-                   dynamicHtml += `<tr class="border-t border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
-                     <td class="p-4 border font-bold text-gray-800 align-top max-w-xs shadow-[inset_-4px_0_0_rgba(156,163,175,0.1)]">Kegiatan Penutup</td>
-                     <td class="p-4 border align-top whitespace-nowrap font-bold text-center text-gray-700 bg-white/50">${result.kegiatan.penutup.waktu || '-'}</td>
-                     <td class="p-4 border align-top text-gray-800">
-                       <ul class="list-disc list-inside space-y-2 text-justify ml-2">`;
-                   (result.kegiatan.penutup.langkah || []).forEach((l: string) => {
-                       dynamicHtml += `<li>${l}</li>`;
-                   });
-                   dynamicHtml += `</ul></td></tr>`;
-                }
+                });
             }
             dynamicHtml += `</tbody></table>`;
-
-            let asesmenAsLearningText = formData.asesmenAsLearning.length > 0 ? formData.asesmenAsLearning.join(', ') : 'Guru (Default: Observasi)';
-            let asesmenForLearningText = formData.asesmenForLearning.length > 0 ? formData.asesmenForLearning.join(', ') : 'Guru (Default: Formatif)';
-            let asesmenOfLearningText = formData.asesmenOfLearning.length > 0 ? formData.asesmenOfLearning.join(', ') : 'Guru (Default: Tes Tertulis)';
-            
-            dynamicHtml += `<h4 class="font-bold text-lg pb-2 pt-2 px-3 mb-4 mt-8 rounded bg-teal-100 text-teal-800 border-l-4 border-teal-600">I. ASESMEN PEMBELAJARAN</h4>`;
-            dynamicHtml += `<ul class="list-disc list-inside space-y-2 mb-8 text-gray-800 text-sm">
-                <li><b>Asesmen As Learning (Refleksi dan Evaluasi Diri):</b> ${asesmenAsLearningText}</li>
-                <li><b>Asesmen For Learning (Perbaikan Proses Belajar):</b> ${asesmenForLearningText}</li>
-                <li><b>Asesmen Of Learning (Penilaian Capaian Belajar):</b> ${asesmenOfLearningText}</li>
-            </ul>`;
 
             // SIGNATURES
             dynamicHtml += `
@@ -358,7 +302,7 @@ export default function MainPreview({
 
           {activeTab === 'welcome' && (
             <div className="prose prose-sm max-w-none print:hidden">
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">SIGMA | Sistem Generator Modul Ajar Berbasis AI</h2>
+                <h2 className="text-2xl font-bold mb-4 text-gray-800">Sistem Pembuat Alur & Modul Ajar</h2>
                 <p>Silakan isi formulir di panel sebelah kiri untuk memulai.</p>
                 <ol className="list-decimal pl-5 space-y-2 text-gray-600 mt-4">
                     <li>Isi data <strong>Identitas Modul</strong> secara lengkap (Bertanda Wajib).</li>

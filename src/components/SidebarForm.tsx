@@ -87,7 +87,7 @@ export default function SidebarForm({
 
       <div className="bg-slate-800 text-white text-[11px] py-1.5 px-3 overflow-hidden whitespace-nowrap">
         <div className="inline-block animate-pulse">
-            SDN BAUJENG 1 | Sistem Generator Modul Ajar Berbasis AI
+            SIGMA | Sistem Generator Modul Ajar Berbasis AI
         </div>
       </div>
 
